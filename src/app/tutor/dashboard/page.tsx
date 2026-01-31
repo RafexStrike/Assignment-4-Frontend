@@ -71,10 +71,12 @@ export default function TutorDashboard() {
   async function fetchDashboardData() {
     try {
       const [bookingsRes, profileRes] = await Promise.all([
-        fetch("/api/bookings", {
+        // fetch("/api/bookings", {
+        fetch("http://localhost:5000/api/bookings", {
           credentials: "include",
         }),
-        fetch("/api/tutor/profile", {
+        // fetch("/api/tutor/profile", {
+        fetch("http://localhost:5000/api/tutor/profile", {
           credentials: "include",
         }),
       ]);
@@ -89,11 +91,11 @@ export default function TutorDashboard() {
       // Calculate stats
       const allBookings = bookingsData.data || [];
       const completedBookings = allBookings.filter(
-        (b: Booking) => b.status === "COMPLETED"
+        (b: Booking) => b.status === "COMPLETED",
       );
       const upcomingBookings = allBookings.filter(
         (b: Booking) =>
-          b.status === "CONFIRMED" && new Date(b.startAt) > new Date()
+          b.status === "CONFIRMED" && new Date(b.startAt) > new Date(),
       );
 
       setBookings(allBookings.slice(0, 5)); // Show last 5 bookings
@@ -102,7 +104,7 @@ export default function TutorDashboard() {
         completedSessions: completedBookings.length,
         totalEarnings: completedBookings.reduce(
           (sum: number, b: Booking) => sum + (b.price || 0),
-          0
+          0,
         ),
         rating: profileData.data?.rating || 0,
         upcomingCount: upcomingBookings.length,
@@ -120,11 +122,15 @@ export default function TutorDashboard() {
     setMessage(null);
 
     try {
-      const res = await fetch(`/api/bookings/${bookingId}/complete`, {
-        method: "PATCH",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-      });
+      // const res = await fetch(`/api/bookings/${bookingId}/complete`, {
+      const res = await fetch(
+        `http://localhost:5000/api/bookings/${bookingId}/complete`,
+        {
+          method: "PATCH",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+        },
+      );
 
       if (!res.ok) {
         const error = await res.json();
@@ -170,9 +176,7 @@ export default function TutorDashboard() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-100">
-            Tutor Dashboard
-          </h1>
+          <h1 className="text-3xl font-bold text-slate-100">Tutor Dashboard</h1>
           <p className="text-slate-400 mt-1">
             Manage your sessions and track your performance
           </p>
@@ -341,8 +345,8 @@ export default function TutorDashboard() {
                           booking.status === "COMPLETED"
                             ? "bg-green-500/10 text-green-400 border border-green-500/20"
                             : booking.status === "CANCELLED"
-                            ? "bg-red-500/10 text-red-400 border border-red-500/20"
-                            : "bg-blue-500/10 text-blue-400 border border-blue-500/20"
+                              ? "bg-red-500/10 text-red-400 border border-red-500/20"
+                              : "bg-blue-500/10 text-blue-400 border border-blue-500/20"
                         }`}
                       >
                         {booking.status}

@@ -57,7 +57,9 @@ export default function AvailabilityPage() {
 
   async function fetchAvailability() {
     try {
-      const res = await fetch("/api/tutor/availability", {
+      // const res = await fetch("/api/tutor/availability", {
+      const res = await fetch("http://localhost:5000/api/tutor/availability", {
+
         credentials: "include",
       });
 
@@ -81,7 +83,9 @@ export default function AvailabilityPage() {
     setMessage(null);
 
     try {
-      const res = await fetch("/api/tutor/availability", {
+      // const res = await fetch("/api/tutor/availability", {
+      const res = await fetch("http://localhost:5000/api/tutor/availability", {
+
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -112,7 +116,9 @@ export default function AvailabilityPage() {
     if (!confirm("Are you sure you want to delete this time slot?")) return;
 
     try {
-      const res = await fetch(`/api/tutor/availability/${slotId}`, {
+      // const res = await fetch(`/api/tutor/availability/${slotId}`, {
+      const res = await fetch(`http://localhost:5000/api/tutor/availability/${slotId}`, {
+
         method: "DELETE",
         credentials: "include",
       });
