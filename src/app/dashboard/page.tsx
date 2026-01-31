@@ -58,7 +58,7 @@ export default function StudentDashboard() {
 
   async function fetchDashboardData() {
     try {
-      const res = await fetch("https://assignment-4-backend-mkn7.onrender.com/api/bookings", {
+      const res = await fetch("https://backend-three-liard-74.vercel.app/api/bookings", {
         credentials: "include",
       });
 

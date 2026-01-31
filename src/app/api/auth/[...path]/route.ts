@@ -2,7 +2,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 
-const BACKEND_URL = "https://assignment-4-backend-mkn7.onrender.com";
+const BACKEND_URL = "https://backend-three-liard-74.vercel.app";
 
 async function handler(request: NextRequest, { params }: any) {
   const resolvedParams = await params;

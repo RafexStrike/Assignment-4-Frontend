@@ -68,7 +68,7 @@ export default function StudentBookingsPage() {
 
   async function fetchBookings() {
     try {
-      const res = await fetch("https://assignment-4-backend-mkn7.onrender.com/api/bookings", {
+      const res = await fetch("https://backend-three-liard-74.vercel.app/api/bookings", {
         credentials: "include",
       });
 
@@ -87,7 +87,7 @@ export default function StudentBookingsPage() {
     if (!confirm("Are you sure you want to cancel this booking?")) return;
 
     try {
-      const res = await fetch(`https://assignment-4-backend-mkn7.onrender.com/api/bookings/${bookingId}/cancel`, {
+      const res = await fetch(`https://backend-three-liard-74.vercel.app/api/bookings/${bookingId}/cancel`, {
         method: "PATCH",
         credentials: "include",
       });
@@ -112,7 +112,7 @@ export default function StudentBookingsPage() {
     setMessage(null);
 
     try {
-      const res = await fetch("https://assignment-4-backend-mkn7.onrender.com/api/reviews", {
+      const res = await fetch("https://backend-three-liard-74.vercel.app/api/reviews", {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
