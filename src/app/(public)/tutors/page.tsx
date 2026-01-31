@@ -85,14 +85,16 @@ export default function TutorsBrowsePage() {
       queryParams.append("sortBy", filters.sortBy);
 
       const res = await fetch(
-        `http://localhost:5000/api/tutors/getTutors?${queryParams}`
+        `http://localhost:5000/api/tutors/getTutors?${queryParams.toString()}`
       );
       if (!res.ok) throw new Error("Failed to fetch tutors");
       
       const data = await res.json();
-      setTutors(data.data || []);
+      console.log("Fetched tutors:", data.data);
+      setTutors(Array.isArray(data.data) ? data.data : []);
     } catch (error) {
       console.error("Error fetching tutors:", error);
+      setTutors([]);
     } finally {
       setLoading(false);
     }

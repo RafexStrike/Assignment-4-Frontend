@@ -81,12 +81,8 @@ export default function TutorDashboard() {
         }),
       ]);
 
-      if (!bookingsRes.ok || !profileRes.ok) {
-        throw new Error("Failed to fetch data");
-      }
-
-      const bookingsData = await bookingsRes.json();
-      const profileData = await profileRes.json();
+      const bookingsData = bookingsRes.ok ? await bookingsRes.json() : { data: [] };
+      const profileData = profileRes.ok ? await profileRes.json() : { data: {} };
 
       // Calculate stats
       const allBookings = bookingsData.data || [];
