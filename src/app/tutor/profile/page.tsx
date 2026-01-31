@@ -64,12 +64,11 @@ export default function TutorProfilePage() {
   async function fetchData() {
     try {
       const [profileRes, categoriesRes] = await Promise.all([
-        fetch("/api/tutor/profile", { credentials: "include" }),
-        fetch("/api/categories", { credentials: "include" }),
+        fetch("http://localhost:5000/api/tutor/profile", { credentials: "include" }),
+        fetch("http://localhost:5000/api/tutors/categories", { credentials: "include" }),
       ]);
 
       if (profileRes.status === 404) {
-        // Profile doesn't exist yet, that's okay
         setProfile(null);
       } else if (!profileRes.ok) {
         throw new Error("Failed to fetch profile");
@@ -103,7 +102,7 @@ export default function TutorProfilePage() {
 
     try {
       const method = profile ? "PUT" : "POST";
-      const res = await fetch("/api/tutor/profile", {
+      const res = await fetch("http://localhost:5000/api/tutor/profile", {
         method,
         credentials: "include",
         headers: { "Content-Type": "application/json" },
