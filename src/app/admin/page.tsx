@@ -53,7 +53,7 @@ export default function AdminDashboard() {
 
   async function fetchStats() {
     try {
-      const res = await fetch("https://assignment-4-backend-mkn7.onrender.com/api/admin/dashboard", {
+      const res = await fetch("http://localhost:5000/api/admin/dashboard", {
         credentials: "include",
       });
 

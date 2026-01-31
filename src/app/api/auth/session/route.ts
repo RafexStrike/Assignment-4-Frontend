@@ -2,7 +2,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 
-const BACKEND_URL = "https://assignment-4-backend-mkn7.onrender.com";
+const BACKEND_URL = "http://localhost:5000";
 
 export async function GET(request: NextRequest) {
   try {

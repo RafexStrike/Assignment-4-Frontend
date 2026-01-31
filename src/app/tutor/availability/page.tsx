@@ -58,7 +58,7 @@ export default function AvailabilityPage() {
   async function fetchAvailability() {
     try {
       // const res = await fetch("/api/tutor/availability", {
-      const res = await fetch("https://assignment-4-backend-mkn7.onrender.com/api/tutor/availability", {
+      const res = await fetch("http://localhost:5000/api/tutor/availability", {
 
         credentials: "include",
       });
@@ -84,7 +84,7 @@ export default function AvailabilityPage() {
 
     try {
       // const res = await fetch("/api/tutor/availability", {
-      const res = await fetch("https://assignment-4-backend-mkn7.onrender.com/api/tutor/availability", {
+      const res = await fetch("http://localhost:5000/api/tutor/availability", {
 
         method: "POST",
         credentials: "include",
@@ -117,7 +117,7 @@ export default function AvailabilityPage() {
 
     try {
       // const res = await fetch(`/api/tutor/availability/${slotId}`, {
-      const res = await fetch(`https://assignment-4-backend-mkn7.onrender.com/api/tutor/availability/${slotId}`, {
+      const res = await fetch(`http://localhost:5000/api/tutor/availability/${slotId}`, {
 
         method: "DELETE",
         credentials: "include",

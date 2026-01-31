@@ -85,7 +85,7 @@ export default function TutorDetailPage() {
 
   async function fetchTutor() {
     try {
-      const res = await fetch(`https://assignment-4-backend-mkn7.onrender.com/api/tutors/getTutors/${params.id}`);
+      const res = await fetch(`http://localhost:5000/api/tutors/getTutors/${params.id}`);
       if (!res.ok) throw new Error("Tutor not found");
       const data = await res.json();
       setTutor(data.data);
@@ -124,7 +124,7 @@ export default function TutorDetailPage() {
 
     setBookingLoading(true);
     try {
-      const res = await fetch("https://assignment-4-backend-mkn7.onrender.com/api/bookings", {
+      const res = await fetch("http://localhost:5000/api/bookings", {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

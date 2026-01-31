@@ -65,7 +65,7 @@ export default function TutorsBrowsePage() {
 
   async function fetchCategories() {
     try {
-      const res = await fetch("https://assignment-4-backend-mkn7.onrender.com/api/tutors/categories");
+      const res = await fetch("http://localhost:5000/api/tutors/categories");
       if (res.ok) {
         const data = await res.json();
         setCategories(data.data || []);
@@ -85,7 +85,7 @@ export default function TutorsBrowsePage() {
       queryParams.append("sortBy", filters.sortBy);
 
       const res = await fetch(
-        `https://assignment-4-backend-mkn7.onrender.com/api/tutors/getTutors?${queryParams.toString()}`
+        `http://localhost:5000/api/tutors/getTutors?${queryParams.toString()}`
       );
       if (!res.ok) throw new Error("Failed to fetch tutors");
       
