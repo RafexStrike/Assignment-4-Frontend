@@ -38,13 +38,24 @@ export default function StudentDashboardLayout({
   }, []);
 
   async function checkAuth() {
+    console.log("[dashboard/layout.tsx] ENTER checkAuth");
+
     try {
+      console.log("[dashboard/layout.tsx] BEFORE SESSION CALL");
+
       const session = await getSession();
+
+      console.log("[dashboard/layout.tsx] AFTER SESSION CALL - user role:", session?.user?.role);
+
       if (!session || session.user?.role !== "STUDENT") {
+        console.log("[dashboard/layout.tsx] AUTH CHECK FAILED - not a student, redirecting to login");
         router.push("/login");
         return;
       }
+
+      console.log("[dashboard/layout.tsx] AUTH CHECK PASSED");
     } catch (error) {
+      console.log("[dashboard/layout.tsx] AUTH ERROR:", error instanceof Error ? error.message : String(error));
       router.push("/login");
     } finally {
       setIsLoading(false);
@@ -52,11 +63,18 @@ export default function StudentDashboardLayout({
   }
 
   async function handleLogout() {
+    console.log("[dashboard/layout.tsx] ENTER handleLogout");
+
     try {
+      console.log("[dashboard/layout.tsx] BEFORE LOGOUT CALL");
+
       await logout();
+
+      console.log("[dashboard/layout.tsx] AFTER LOGOUT - redirecting to login");
+
       router.push("/login");
     } catch (error) {
-      console.error("Logout failed:", error);
+      console.error("[dashboard/layout.tsx] Logout failed:", error instanceof Error ? error.message : String(error));
     }
   }
 

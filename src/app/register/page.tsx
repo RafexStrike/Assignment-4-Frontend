@@ -41,35 +41,52 @@ export default function RegisterPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    console.log("[register/page.tsx] ENTER handleSubmit, email:", email, "role:", role);
+
     setError("");
+
+    console.log("[register/page.tsx] BEFORE VALIDATION - password length check");
 
     // Validate password match
     if (password !== confirmPassword) {
+      console.log("[register/page.tsx] VALIDATION FAILED - passwords do not match");
       setError("Passwords do not match");
       return;
     }
 
     // Validate password length
     if (password.length < 6) {
+      console.log("[register/page.tsx] VALIDATION FAILED - password too short");
       setError("Password must be at least 6 characters");
       return;
     }
 
+    console.log("[register/page.tsx] VALIDATION PASSED");
+
     setLoading(true);
 
     try {
+      console.log("[register/page.tsx] BEFORE REGISTER CALL");
+
       const data = await register(name, email, password, role);
+
+      console.log("[register/page.tsx] AFTER REGISTER CALL - checking email verification");
 
       // Check if email is verified
       if (!data.user.emailVerified) {
+        console.log("[register/page.tsx] EMAIL NOT VERIFIED - redirecting to verify-email");
         router.push("/verify-email");
         return;
       }
 
+      console.log("[register/page.tsx] BEFORE REDIRECT - user role:", data.user.role);
+
       // Redirect based on role
       const redirectPath = getRedirectPath(data.user.role);
+      console.log("[register/page.tsx] EXIT handleSubmit - redirecting to:", redirectPath);
       router.push(redirectPath);
     } catch (err) {
+      console.log("[register/page.tsx] CATCH ERROR:", err instanceof Error ? err.message : "Registration failed");
       setError(err instanceof Error ? err.message : "Registration failed");
     } finally {
       setLoading(false);

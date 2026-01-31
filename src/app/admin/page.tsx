@@ -52,17 +52,28 @@ export default function AdminDashboard() {
   }, []);
 
   async function fetchStats() {
+    console.log("[admin/page.tsx] ENTER fetchStats");
+
     try {
+      console.log("[admin/page.tsx] BEFORE API CALL - fetching admin dashboard stats");
+
       const res = await fetch("https://backend-three-liard-74.vercel.app/api/admin/dashboard", {
         credentials: "include",
       });
 
+      console.log("[admin/page.tsx] AFTER API CALL - response status:", res.status);
+
       if (!res.ok) throw new Error("Failed to fetch stats");
 
       const data = await res.json();
+
+      console.log("[admin/page.tsx] AFTER DATA PARSE - setting stats, users total:", data.data?.users?.total);
+
       setStats(data.data);
+
+      console.log("[admin/page.tsx] EXIT fetchStats - success");
     } catch (error) {
-      console.error("Error fetching stats:", error);
+      console.error("[admin/page.tsx] Error fetching stats:", error instanceof Error ? error.message : String(error));
     } finally {
       setLoading(false);
     }

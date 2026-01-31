@@ -8,7 +8,10 @@ async function handler(request: NextRequest, { params }: any) {
   const resolvedParams = await params;
   const path = resolvedParams.path?.join("/") || "";
 
+  console.log("[api/auth/[...path]/route.ts] ENTER handler, method:", request.method, "path:", path);
+
   if (!path) {
+    console.log("[api/auth/[...path]/route.ts] ERROR - no path specified");
     return NextResponse.json(
       { error: "Path not specified" },
       { status: 400 }
@@ -18,6 +21,8 @@ async function handler(request: NextRequest, { params }: any) {
   const backendUrl = `${BACKEND_URL}/api/auth/${path}`;
   const method = request.method;
 
+  console.log("[api/auth/[...path]/route.ts] BEFORE BACKEND CALL - url:", backendUrl);
+
   try {
     const headers = new Headers({
       "Content-Type": "application/json",
@@ -26,6 +31,7 @@ async function handler(request: NextRequest, { params }: any) {
 
     const cookieHeader = request.headers.get("cookie");
     if (cookieHeader) {
+      console.log("[api/auth/[...path]/route.ts] BEFORE FETCH - forwarding cookies");
       headers.set("cookie", cookieHeader);
     }
 
@@ -39,8 +45,12 @@ async function handler(request: NextRequest, { params }: any) {
       fetchOptions.body = await request.text();
     }
 
+    console.log("[api/auth/[...path]/route.ts] BEFORE FETCH - sending request to backend");
+
     const response = await fetch(backendUrl, fetchOptions);
     const contentType = response.headers.get("content-type");
+
+    console.log("[api/auth/[...path]/route.ts] AFTER FETCH - backend response status:", response.status);
 
     let data;
     if (contentType?.includes("application/json")) {
@@ -52,7 +62,7 @@ async function handler(request: NextRequest, { params }: any) {
           data = {};
         }
       } catch (parseErr) {
-        console.error(`Failed to parse JSON response from ${backendUrl}:`, parseErr);
+        console.error("[api/auth/[...path]/route.ts] Failed to parse JSON response from", backendUrl, ":", parseErr);
         data = {};
       }
     } else {
@@ -75,12 +85,14 @@ async function handler(request: NextRequest, { params }: any) {
       }
     });
 
+    console.log("[api/auth/[...path]/route.ts] BEFORE RESPONSE - preparing response with status:", response.status);
+
     return NextResponse.json(data, {
       status: response.status,
       headers: responseHeaders,
     });
   } catch (error) {
-    console.error("Auth proxy error:", error);
+    console.error("[api/auth/[...path]/route.ts] Auth proxy error:", error instanceof Error ? error.message : String(error));
     return NextResponse.json(
       { error: "Failed to process request" },
       { status: 500 }

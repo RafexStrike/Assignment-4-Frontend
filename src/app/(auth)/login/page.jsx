@@ -27,28 +27,42 @@ export default function LoginPage() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    console.log("[login/page.jsx] ENTER handleSubmit, email:", email);
+
     setError("");
     setLoading(true);
 
     try {
+      console.log("[login/page.jsx] BEFORE LOGIN CALL");
+
       const data = await login(email, password);
+
+      console.log("[login/page.jsx] AFTER LOGIN CALL - checking email verification");
 
       // Check if email is verified
       if (!data.user.emailVerified) {
+        console.log("[login/page.jsx] EMAIL NOT VERIFIED - redirecting to verify-email");
         router.push("/verify-email");
         return;
       }
 
+      console.log("[login/page.jsx] BEFORE BAN CHECK");
+
       // Check if user is banned
       if (data.user.isBanned) {
+        console.log("[login/page.jsx] USER IS BANNED");
         setError(data.user.banReason || "Your account has been banned");
         return;
       }
 
+      console.log("[login/page.jsx] BEFORE REDIRECT - user role:", data.user.role);
+
       // Redirect based on role
       const redirectPath = getRedirectPath(data.user.role);
+      console.log("[login/page.jsx] EXIT handleSubmit - redirecting to:", redirectPath);
       router.push(redirectPath);
     } catch (err) {
+      console.log("[login/page.jsx] CATCH ERROR:", err instanceof Error ? err.message : String(err));
       setError(err.message);
     } finally {
       setLoading(false);
