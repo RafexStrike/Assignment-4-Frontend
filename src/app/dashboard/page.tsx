@@ -58,7 +58,7 @@ export default function StudentDashboard() {
 
   async function fetchDashboardData() {
     try {
-      const res = await fetch("http://localhost:5000/api/bookings", {
+      const res = await fetch("https://assignment-4-backend-mkn7.onrender.com/api/bookings", {
         credentials: "include",
       });
 

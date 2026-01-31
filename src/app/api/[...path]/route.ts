@@ -2,7 +2,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 
-const BACKEND_URL = "http://localhost:5000";
+const BACKEND_URL = "https://assignment-4-backend-mkn7.onrender.com";
 
 
 async function handler(
@@ -16,7 +16,7 @@ async function handler(
 
   try {
     const headers = new Headers(request.headers);
-    headers.set("Origin", "http://localhost:3000");
+    headers.set("Origin", "https://assignment-4-frontend-3lv8.vercel.app");
 
     let body: BodyInit | undefined;
     if (request.method !== "GET" && request.method !== "HEAD") {

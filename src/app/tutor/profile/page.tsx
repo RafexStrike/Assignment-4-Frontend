@@ -64,8 +64,8 @@ export default function TutorProfilePage() {
   async function fetchData() {
     try {
       const [profileRes, categoriesRes] = await Promise.all([
-        fetch("http://localhost:5000/api/tutor/profile", { credentials: "include" }),
-        fetch("http://localhost:5000/api/tutors/categories", { credentials: "include" }),
+        fetch("https://assignment-4-backend-mkn7.onrender.com/api/tutor/profile", { credentials: "include" }),
+        fetch("https://assignment-4-backend-mkn7.onrender.com/api/tutors/categories", { credentials: "include" }),
       ]);
 
       if (profileRes.status === 404) {
@@ -102,7 +102,7 @@ export default function TutorProfilePage() {
 
     try {
       const method = profile ? "PUT" : "POST";
-      const res = await fetch("http://localhost:5000/api/tutor/profile", {
+      const res = await fetch("https://assignment-4-backend-mkn7.onrender.com/api/tutor/profile", {
         method,
         credentials: "include",
         headers: { "Content-Type": "application/json" },

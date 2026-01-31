@@ -72,7 +72,7 @@ export default function AdminUsersPage() {
       if (search) queryParams.append("search", search);
       if (roleFilter) queryParams.append("role", roleFilter);
 
-      const res = await fetch(`http://localhost:5000/api/admin/users?${queryParams}`, {
+      const res = await fetch(`https://assignment-4-backend-mkn7.onrender.com/api/admin/users?${queryParams}`, {
         credentials: "include",
       });
 
@@ -100,7 +100,7 @@ export default function AdminUsersPage() {
     setMessage(null);
 
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/users/${userId}/ban`, {
+      const res = await fetch(`https://assignment-4-backend-mkn7.onrender.com/api/admin/users/${userId}/ban`, {
         method: "PATCH",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

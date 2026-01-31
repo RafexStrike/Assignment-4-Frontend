@@ -2,7 +2,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 
-const BACKEND_URL = "http://localhost:5000";
+const BACKEND_URL = "https://assignment-4-backend-mkn7.onrender.com";
 
 async function handler(request: NextRequest, { params }: any) {
   const resolvedParams = await params;
@@ -21,7 +21,7 @@ async function handler(request: NextRequest, { params }: any) {
   try {
     const headers = new Headers({
       "Content-Type": "application/json",
-      "Origin": "http://localhost:3000",
+      "Origin": "https://assignment-4-frontend-3lv8.vercel.app",
     });
 
     const cookieHeader = request.headers.get("cookie");
