@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 export async function middleware(request) {
   const { pathname } = request.nextUrl;
 
-  console.log("[middleware.js] ENTER middleware, pathname:", pathname);
+  console.log("[middleware.js] ENTERED middleware, pathname:", pathname);
 
   // Define protected routes (only protect routes that actually exist)
   const protectedRoutes = ["/tutor/"];
