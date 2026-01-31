@@ -73,7 +73,7 @@ export default function StudentDashboardLayout({
       {/* Desktop Sidebar */}
       <aside className="hidden lg:flex flex-col w-64 border-r border-slate-800/50 bg-slate-900/30 backdrop-blur-xl">
         <div className="p-6 border-b border-slate-800/50">
-          <Link href="/dashboard" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2">
             <div className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/20">
               <GraduationCap className="h-6 w-6 text-blue-400" />
             </div>
@@ -120,7 +120,7 @@ export default function StudentDashboardLayout({
       {/* Mobile Header */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800/50">
         <div className="flex items-center justify-between p-4">
-          <Link href="/dashboard" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2">
             <div className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/20">
               <GraduationCap className="h-5 w-5 text-blue-400" />
             </div>

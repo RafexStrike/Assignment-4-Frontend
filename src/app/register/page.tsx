@@ -110,7 +110,7 @@ export default function RegisterPage() {
                 </span>
               </CardTitle>
               <CardDescription className="text-slate-400">
-                Join TutorConnect and start learning or teaching today
+                Join SkillBridge and start learning or teaching today
               </CardDescription>
             </div>
 

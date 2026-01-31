@@ -66,7 +66,7 @@ export function Navbar() {
               <GraduationCap className="h-8 w-8 text-blue-500 relative z-10 group-hover:scale-110 transition-transform duration-300" />
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-blue-400 via-blue-500 to-cyan-400 bg-clip-text text-transparent">
-              TutorConnect
+              SkillBridge
             </span>
           </Link>
 

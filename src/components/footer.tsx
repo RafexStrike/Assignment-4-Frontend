@@ -17,7 +17,7 @@ export function Footer() {
                 <GraduationCap className="h-8 w-8 text-blue-500 relative z-10" />
               </div>
               <span className="text-xl font-bold bg-gradient-to-r from-blue-400 via-blue-500 to-cyan-400 bg-clip-text text-transparent">
-                TutorConnect
+                SkillBridge
               </span>
             </Link>
             <p className="text-sm text-slate-400 max-w-xs">
@@ -85,8 +85,8 @@ export function Footer() {
             <ul className="space-y-3">
               <li className="flex items-center gap-2 text-sm text-slate-400">
                 <Mail className="h-4 w-4 text-blue-500" />
-                <a href="mailto:hello@tutorconnect.com" className="hover:text-blue-400 transition-colors duration-200">
-                  hello@tutorconnect.com
+                <a href="mailto:hello@SkillBridge.com" className="hover:text-blue-400 transition-colors duration-200">
+                  hello@SkillBridge.com
                 </a>
               </li>
               <li className="flex items-center gap-2 text-sm text-slate-400">
@@ -106,7 +106,7 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="mt-12 pt-8 border-t border-slate-800/50 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-sm text-slate-500">
-            © {new Date().getFullYear()} TutorConnect. All rights reserved.
+            © {new Date().getFullYear()} SkillBridge. All rights reserved.
           </p>
           <div className="flex gap-6">
             <Link href="/privacy" className="text-sm text-slate-500 hover:text-blue-400 transition-colors duration-200">

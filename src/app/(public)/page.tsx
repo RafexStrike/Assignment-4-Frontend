@@ -122,7 +122,7 @@ export default function HomePage() {
               </span>
             </h2>
             <p className="text-lg text-slate-400">
-              Getting started with TutorConnect is simple. Follow these three
+              Getting started with SkillBridge is simple. Follow these three
               easy steps to find your perfect tutor.
             </p>
           </div>
@@ -184,7 +184,7 @@ export default function HomePage() {
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-4xl sm:text-5xl font-bold mb-4">
               <span className="bg-gradient-to-r from-slate-100 to-blue-100 bg-clip-text text-transparent">
-                Why Choose TutorConnect
+                Why Choose SkillBridge
               </span>
             </h2>
             <p className="text-lg text-slate-400">
@@ -262,7 +262,7 @@ export default function HomePage() {
             </h2>
             <p className="text-lg text-slate-400">
               Hear from students who transformed their learning journey with
-              TutorConnect.
+              SkillBridge.
             </p>
           </div>
 
