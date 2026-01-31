@@ -1,7 +1,11 @@
 "use client";
 
+// src/app/(auth)/login/page.jsx
+
 // import { motion } from "framer-motion";
 import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,10 +14,47 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { Mail, Lock, ArrowRight, ShieldCheck } from "lucide-react";
+import { Mail, Lock, ArrowRight, ShieldCheck, AlertCircle } from "lucide-react";
 import { AnimatedBackground } from "@/components/animated-background";
+import { login, getRedirectPath } from "@/lib/auth-client";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const data = await login(email, password);
+
+      // Check if email is verified
+      if (!data.user.emailVerified) {
+        router.push("/verify-email");
+        return;
+      }
+
+      // Check if user is banned
+      if (data.user.isBanned) {
+        setError(data.user.banReason || "Your account has been banned");
+        return;
+      }
+
+      // Redirect based on role
+      const redirectPath = getRedirectPath(data.user.role);
+      router.push(redirectPath);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div className="relative min-h-screen flex items-center justify-center px-4">
       {/* Background */}
@@ -53,7 +94,15 @@ export default function LoginPage() {
             </div>
 
             {/* Form */}
-            <form className="space-y-5 pt-4">
+            <form className="space-y-5 pt-4" onSubmit={handleSubmit}>
+              {/* Error Message */}
+              {error && (
+                <div className="flex items-start gap-3 p-3 rounded-lg bg-red-500/10 border border-red-500/30">
+                  <AlertCircle className="h-5 w-5 text-red-400 flex-shrink-0 mt-0.5" />
+                  <p className="text-sm text-red-300">{error}</p>
+                </div>
+              )}
+
               {/* Email */}
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
@@ -61,6 +110,10 @@ export default function LoginPage() {
                   type="email"
                   placeholder="Email address"
                   className="pl-10 bg-slate-950/60 border-slate-800/50 focus-visible:ring-0"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  disabled={loading}
                 />
               </div>
 
@@ -71,6 +124,10 @@ export default function LoginPage() {
                   type="password"
                   placeholder="Password"
                   className="pl-10 bg-slate-950/60 border-slate-800/50 focus-visible:ring-0"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  disabled={loading}
                 />
               </div>
 
@@ -95,10 +152,13 @@ export default function LoginPage() {
                 type="submit"
                 size="lg"
                 className="w-full group relative overflow-hidden"
+                disabled={loading}
               >
                 <span className="relative z-10 flex items-center justify-center gap-2">
-                  Sign In
-                  <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+                  {loading ? "Signing in..." : "Sign In"}
+                  {!loading && (
+                    <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+                  )}
                 </span>
                 <span className="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-600 opacity-0 group-hover:opacity-100 transition" />
               </Button>

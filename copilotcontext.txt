@@ -1,0 +1,21 @@
+Design System Context: My project uses a deep "Midnight/Dark Blue" theme. Here are the core tokens:
+
+Backgrounds: Primary: #0a0e1a, Secondary: #0f1525.
+
+Primary Brand: #0057e6 (Blue-600) with Cyan accents.
+
+Typography: "Bricolage Grotesque" for headings, "Inter" for body.
+
+Effects: Extensive use of backdrop-blur-xl, border transparency (border-slate-800/50), and blue-600 glow shadows.
+
+Styling Rules:
+
+Use Tailwind CSS.
+
+For dark backgrounds, use bg-[#0a0e1a] or bg-slate-950.
+
+For cards, use bg-slate-900/50 backdrop-blur-sm border border-slate-800/50.
+
+Use Lucide React for icons.
+
+Implement "Glow" effects on buttons and inputs using gradients.
