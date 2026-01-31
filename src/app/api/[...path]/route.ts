@@ -4,15 +4,11 @@ import { NextRequest, NextResponse } from "next/server";
 
 const BACKEND_URL = "http://localhost:5000";
 
-/**
- * Proxy handler for forwarding /api/* requests
- * from Next.js frontend to Express backend
- */
+
 async function handler(
   request: NextRequest,
   context: { params: Promise<{ path: string[] }> }
 ) {
-  // MUST await params in Next.js 15
   const { path } = await context.params;
   const joinedPath = path?.join("/") || "";
 

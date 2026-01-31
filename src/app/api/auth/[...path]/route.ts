@@ -24,7 +24,6 @@ async function handler(request: NextRequest, { params }: any) {
       "Origin": "http://localhost:3000",
     });
 
-    // Forward cookies from the incoming request to the backend
     const cookieHeader = request.headers.get("cookie");
     if (cookieHeader) {
       headers.set("cookie", cookieHeader);
@@ -62,7 +61,6 @@ async function handler(request: NextRequest, { params }: any) {
 
     const responseHeaders = new Headers();
 
-    // Copy relevant headers from backend response
     const headersToProxy = [
       "content-type",
       "set-cookie",
