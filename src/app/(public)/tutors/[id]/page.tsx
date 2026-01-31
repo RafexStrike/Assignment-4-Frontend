@@ -21,7 +21,6 @@ import {
   Clock,
   Loader2,
   ArrowLeft,
-  User,
   CheckCircle2,
   AlertCircle,
 } from "lucide-react";
@@ -39,7 +38,7 @@ interface Review {
 
 interface AvailabilitySlot {
   id: string;
-  dayOfWeek: number;
+  dayOfWeek: number; // 0 (Sun) to 6 (Sat)
   startTime: string;
   endTime: string;
 }
@@ -65,7 +64,7 @@ interface Tutor {
   reviews: Review[];
 }
 
-const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 export default function TutorDetailPage() {
   const params = useParams();
@@ -75,7 +74,6 @@ export default function TutorDetailPage() {
   const [bookingLoading, setBookingLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   
-  // Booking form state
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
   const [selectedSubject, setSelectedSubject] = useState("");
@@ -98,6 +96,14 @@ export default function TutorDetailPage() {
     }
   }
 
+  // Helper to group availability by day
+  const groupedAvailability = tutor?.availability.reduce((acc, slot) => {
+    const day = DAYS[slot.dayOfWeek];
+    if (!acc[day]) acc[day] = [];
+    acc[day].push(slot);
+    return acc;
+  }, {} as Record<string, AvailabilitySlot[]>);
+
   async function handleBooking(e: React.FormEvent) {
     e.preventDefault();
     setMessage(null);
@@ -113,18 +119,11 @@ export default function TutorDetailPage() {
       return;
     }
 
-    if (!selectedDate || !selectedTime || !selectedSubject) {
-      setMessage({ type: "error", text: "Please fill in all fields" });
-      return;
-    }
+    const startAt = new Date(`${selectedDate}T${selectedTime}`);
+    const endAt = new Date(startAt.getTime() + 60 * 60 * 1000);
 
     setBookingLoading(true);
-
     try {
-      // Calculate start and end times
-      const startAt = new Date(`${selectedDate}T${selectedTime}`);
-      const endAt = new Date(startAt.getTime() + 60 * 60 * 1000); // 1 hour session
-
       const res = await fetch("http://localhost:5000/api/bookings", {
         method: "POST",
         credentials: "include",
@@ -134,287 +133,151 @@ export default function TutorDetailPage() {
           subject: selectedSubject,
           startAt: startAt.toISOString(),
           endAt: endAt.toISOString(),
-          notes: notes || undefined,
+          notes,
         }),
       });
 
-      if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error.message || "Failed to book session");
-      }
+      if (!res.ok) throw new Error("Booking failed");
 
       setMessage({ type: "success", text: "Session booked successfully!" });
       setTimeout(() => router.push("/dashboard/bookings"), 2000);
-    } catch (error: any) {
-      setMessage({ type: "error", text: error.message });
+    } catch (err: any) {
+      setMessage({ type: "error", text: err.message });
     } finally {
       setBookingLoading(false);
     }
   }
 
-  function getAvailableTimesForDate(dateStr: string) {
-    if (!dateStr || !tutor) return [];
-    const date = new Date(dateStr);
-    const dayOfWeek = date.getDay();
-    return tutor.availability.filter(slot => slot.dayOfWeek === dayOfWeek);
-  }
+  if (loading) return <div className="min-h-screen bg-slate-950 flex items-center justify-center"><Loader2 className="animate-spin text-blue-500" /></div>;
+  if (!tutor) return <div className="min-h-screen bg-slate-950 text-white flex items-center justify-center">Tutor not found</div>;
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-slate-950 pt-24 flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-      </div>
-    );
-  }
-
-  if (!tutor) {
-    return (
-      <div className="min-h-screen bg-slate-950 pt-24 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <p className="text-slate-400">Tutor not found</p>
-          <Button onClick={() => router.push("/tutors")} className="mt-4">
-            Back to Tutors
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
-  const availableSlots = getAvailableTimesForDate(selectedDate);
+  const currentAvailableSlots = selectedDate 
+    ? tutor.availability.filter(s => s.dayOfWeek === new Date(selectedDate).getDay())
+    : [];
 
   return (
-    <div className="min-h-screen bg-slate-950 pt-24 pb-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-5xl mx-auto space-y-8">
-        {/* Back Button */}
-        <Button
-          variant="ghost"
-          className="text-slate-400 hover:text-slate-200"
-          onClick={() => router.push("/tutors")}
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Tutors
+    <div className="min-h-screen bg-slate-950 pt-24 pb-12 px-4 sm:px-6 lg:px-8 text-slate-200">
+      <div className="max-w-6xl mx-auto space-y-8">
+        <Button variant="ghost" onClick={() => router.push("/tutors")} className="text-slate-400">
+          <ArrowLeft className="h-4 w-4 mr-2" /> Back
         </Button>
 
-        {/* Tutor Header */}
-        <div className="relative">
-          <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl blur opacity-20" />
-          <Card className="relative bg-slate-900/60 backdrop-blur-xl border-slate-800/50">
-            <CardContent className="p-8">
-              <div className="flex flex-col md:flex-row gap-6">
-                <div className="h-24 w-24 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-3xl font-bold text-blue-400">
-                  {tutor.user?.name?.charAt(0).toUpperCase() || "T"}
-                </div>
-                <div className="flex-1">
-                  <h1 className="text-3xl font-bold text-slate-100">
-                    {tutor.user?.name || "Anonymous Tutor"}
-                  </h1>
-                  <div className="flex items-center gap-4 mt-2">
-                    <div className="flex items-center gap-1">
-                      <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
-                      <span className="text-lg text-slate-200">
-                        {tutor.rating?.toFixed(1) || "New"}
-                      </span>
-                      <span className="text-slate-500">
-                        ({tutor.totalReviews || 0} reviews)
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-1 text-slate-300">
-                      <DollarSign className="h-5 w-5 text-green-400" />
-                      <span className="font-semibold">${tutor.hourlyRate || 0}/hr</span>
-                    </div>
-                  </div>
-                  <div className="flex flex-wrap gap-2 mt-4">
-                    {tutor.categories.map((cat) => (
-                      <span
-                        key={cat.id}
-                        className="px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-sm text-blue-300"
-                      >
-                        {cat.name}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+        {/* --- Header Section --- */}
+        <Card className="bg-slate-900/60 border-slate-800">
+          <CardContent className="p-8 flex flex-col md:flex-row gap-6 items-center md:items-start">
+            <div className="h-32 w-32 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-4xl font-bold text-blue-400">
+              {tutor.user.name?.[0]}
+            </div>
+            <div className="text-center md:text-left">
+              <h1 className="text-3xl font-bold text-white">{tutor.user.name}</h1>
+              <div className="flex items-center justify-center md:justify-start gap-4 mt-2">
+                <span className="flex items-center text-yellow-500"><Star className="h-4 w-4 fill-current mr-1"/> {tutor.rating || "New"}</span>
+                <span className="flex items-center text-green-400"><DollarSign className="h-4 w-4 mr-1"/> {tutor.hourlyRate}/hr</span>
               </div>
-            </CardContent>
-          </Card>
-        </div>
+              <div className="flex flex-wrap gap-2 mt-4 justify-center md:justify-start">
+                {tutor.categories.map(c => <span key={c.id} className="px-3 py-1 bg-blue-500/10 text-blue-300 rounded-full text-xs border border-blue-500/20">{c.name}</span>)}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Left Column - Info */}
-          <div className="space-y-6">
-            <Card className="bg-slate-900/60 backdrop-blur-xl border-slate-800/50">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* --- Left Content (Info & Availability) --- */}
+          <div className="lg:col-span-2 space-y-6">
+            <Card className="bg-slate-900/60 border-slate-800">
+              <CardHeader><CardTitle className="text-white">About the Tutor</CardTitle></CardHeader>
+              <CardContent><p className="text-slate-400">{tutor.bio}</p></CardContent>
+            </Card>
+
+            {/* NEW: VISUAL AVAILABILITY SECTION */}
+            <Card className="bg-slate-900/60 border-slate-800">
               <CardHeader>
-                <CardTitle className="text-slate-100">About</CardTitle>
+                <CardTitle className="text-white flex items-center gap-2">
+                  <Clock className="h-5 w-5 text-blue-400" /> Weekly Schedule
+                </CardTitle>
+                <CardDescription>Standard working hours for this tutor</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-slate-300 leading-relaxed">
-                  {tutor.bio || "No bio available"}
-                </p>
-                {tutor.education && (
-                  <div className="pt-4 border-t border-slate-800/50">
-                    <h4 className="text-sm font-medium text-slate-400 mb-1">Education</h4>
-                    <p className="text-slate-300">{tutor.education}</p>
-                  </div>
-                )}
+              <CardContent>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {DAYS.map((day, index) => {
+                    const slots = tutor.availability.filter(s => s.dayOfWeek === index);
+                    return (
+                      <div key={day} className="p-3 rounded-lg bg-slate-950/50 border border-slate-800/50">
+                        <p className="text-sm font-semibold text-slate-300 mb-2">{day}</p>
+                        {slots.length > 0 ? (
+                          <div className="space-y-1">
+                            {slots.map(slot => (
+                              <p key={slot.id} className="text-xs text-blue-400 bg-blue-500/5 px-2 py-1 rounded">
+                                {slot.startTime} - {slot.endTime}
+                              </p>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="text-xs text-slate-600 italic">No availability</p>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-slate-900/60 backdrop-blur-xl border-slate-800/50">
-              <CardHeader>
-                <CardTitle className="text-slate-100">Reviews</CardTitle>
-              </CardHeader>
+            <Card className="bg-slate-900/60 border-slate-800">
+              <CardHeader><CardTitle className="text-white">Reviews</CardTitle></CardHeader>
               <CardContent>
-                {tutor.reviews.length === 0 ? (
-                  <p className="text-slate-500 text-center py-4">No reviews yet</p>
-                ) : (
-                  <div className="space-y-4">
-                    {tutor.reviews.map((review) => (
-                      <div key={review.id} className="border-b border-slate-800/50 last:border-0 pb-4 last:pb-0">
-                        <div className="flex items-center gap-2 mb-2">
-                          <div className="flex">
-                            {[...Array(5)].map((_, i) => (
-                              <Star
-                                key={i}
-                                className={`h-4 w-4 ${
-                                  i < review.rating
-                                    ? "text-yellow-500 fill-yellow-500"
-                                    : "text-slate-600"
-                                }`}
-                              />
-                            ))}
-                          </div>
-                          <span className="text-sm text-slate-500">
-                            {new Date(review.createdAt).toLocaleDateString()}
-                          </span>
-                        </div>
-                        <p className="text-slate-300 text-sm">{review.comment}</p>
-                        <p className="text-xs text-slate-500 mt-1">By {review.author?.name || "Anonymous"}</p>
-                      </div>
-                    ))}
+                {tutor.reviews.length === 0 ? <p className="text-slate-500">No reviews yet</p> : tutor.reviews.map(r => (
+                  <div key={r.id} className="border-b border-slate-800 py-4 last:border-0">
+                    <div className="flex gap-1 mb-1">{[...Array(5)].map((_, i) => <Star key={i} className={`h-3 w-3 ${i < r.rating ? "fill-yellow-500 text-yellow-500" : "text-slate-700"}`} />)}</div>
+                    <p className="text-sm text-slate-300">{r.comment}</p>
+                    <p className="text-xs text-slate-500 mt-1">— {r.author.name}</p>
                   </div>
-                )}
+                ))}
               </CardContent>
             </Card>
           </div>
 
-          {/* Right Column - Booking */}
-          <div>
-            <Card className="bg-slate-900/60 backdrop-blur-xl border-slate-800/50 sticky top-24">
+          {/* --- Right Content (Booking Form) --- */}
+          <div className="lg:col-span-1">
+            <Card className="bg-slate-900/60 border-slate-800 sticky top-24">
               <CardHeader>
-                <CardTitle className="text-slate-100 flex items-center gap-2">
-                  <Calendar className="h-5 w-5 text-blue-400" />
-                  Book a Session
-                </CardTitle>
-                <CardDescription className="text-slate-400">
-                  Select your preferred date and time
-                </CardDescription>
+                <CardTitle className="text-white">Book a Session</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-4">
                 {message && (
-                  <div
-                    className={`flex items-center gap-2 p-3 rounded-lg mb-4 ${
-                      message.type === "success"
-                        ? "bg-green-500/10 border border-green-500/30 text-green-400"
-                        : "bg-red-500/10 border border-red-500/30 text-red-400"
-                    }`}
-                  >
-                    {message.type === "success" ? (
-                      <CheckCircle2 className="h-4 w-4" />
-                    ) : (
-                      <AlertCircle className="h-4 w-4" />
-                    )}
-                    <p className="text-sm">{message.text}</p>
-                  </div>
+                   <div className={`p-3 rounded-md text-sm flex items-center gap-2 ${message.type === 'success' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'}`}>
+                    {message.type === 'success' ? <CheckCircle2 className="h-4 w-4"/> : <AlertCircle className="h-4 w-4"/>}
+                    {message.text}
+                   </div>
                 )}
-
                 <form onSubmit={handleBooking} className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-slate-400 mb-2">
-                      Subject
-                    </label>
-                    <select
-                      value={selectedSubject}
-                      onChange={(e) => setSelectedSubject(e.target.value)}
-                      className="w-full h-10 px-3 rounded-md bg-slate-950/60 border border-slate-800/50 text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                      required
-                    >
-                      <option value="">Select a subject</option>
-                      {tutor.categories.map((cat) => (
-                        <option key={cat.id} value={cat.name}>
-                          {cat.name}
-                        </option>
-                      ))}
+                  <div className="space-y-2">
+                    <label className="text-xs text-slate-400">Select Subject</label>
+                    <select value={selectedSubject} onChange={(e) => setSelectedSubject(e.target.value)} required className="w-full bg-slate-950 border-slate-800 rounded-md p-2 text-sm">
+                      <option value="">Choose subject...</option>
+                      {tutor.categories.map(c => <option key={c.id} value={c.name}>{c.name}</option>)}
                     </select>
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-slate-400 mb-2">
-                      Date
-                    </label>
-                    <Input
-                      type="date"
-                      value={selectedDate}
-                      onChange={(e) => {
-                        setSelectedDate(e.target.value);
-                        setSelectedTime("");
-                      }}
-                      min={new Date().toISOString().split('T')[0]}
-                      className="bg-slate-950/60 border-slate-800/50"
-                      required
-                    />
+                  <div className="space-y-2">
+                    <label className="text-xs text-slate-400">Date</label>
+                    <Input type="date" value={selectedDate} onChange={(e) => { setSelectedDate(e.target.value); setSelectedTime(""); }} min={new Date().toISOString().split('T')[0]} className="bg-slate-950 border-slate-800" required />
                   </div>
 
                   {selectedDate && (
-                    <div>
-                      <label className="block text-sm font-medium text-slate-400 mb-2">
-                        Available Times
-                      </label>
-                      {availableSlots.length === 0 ? (
-                        <p className="text-sm text-slate-500">No availability on this day</p>
-                      ) : (
-                        <div className="grid grid-cols-2 gap-2">
-                          {availableSlots.map((slot) => (
-                            <button
-                              key={slot.id}
-                              type="button"
-                              onClick={() => setSelectedTime(slot.startTime)}
-                              className={`p-2 rounded-lg border text-sm transition ${
-                                selectedTime === slot.startTime
-                                  ? "border-blue-500/50 bg-blue-500/10 text-blue-400"
-                                  : "border-slate-800/50 bg-slate-950/40 text-slate-300 hover:border-slate-700"
-                              }`}
-                            >
-                              {slot.startTime} - {slot.endTime}
-                            </button>
-                          ))}
-                        </div>
-                      )}
+                    <div className="space-y-2">
+                      <label className="text-xs text-slate-400">Available Times for {DAYS[new Date(selectedDate).getDay()]}</label>
+                      <div className="grid grid-cols-1 gap-2">
+                        {currentAvailableSlots.length > 0 ? currentAvailableSlots.map(slot => (
+                          <button key={slot.id} type="button" onClick={() => setSelectedTime(slot.startTime)} className={`p-2 text-xs rounded border transition ${selectedTime === slot.startTime ? "bg-blue-600 border-blue-500 text-white" : "bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-600"}`}>
+                            {slot.startTime} - {slot.endTime}
+                          </button>
+                        )) : <p className="text-xs text-red-400">Tutor is not available on this day.</p>}
+                      </div>
                     </div>
                   )}
 
-                  <div>
-                    <label className="block text-sm font-medium text-slate-400 mb-2">
-                      Notes (Optional)
-                    </label>
-                    <textarea
-                      value={notes}
-                      onChange={(e) => setNotes(e.target.value)}
-                      placeholder="Any specific topics or requirements..."
-                      className="w-full min-h-[80px] px-3 py-2 rounded-md bg-slate-950/60 border border-slate-800/50 text-slate-100 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 resize-none text-sm"
-                    />
-                  </div>
-
-                  <Button
-                    type="submit"
-                    className="w-full bg-blue-600 hover:bg-blue-500"
-                    disabled={bookingLoading || !selectedTime}
-                  >
-                    {bookingLoading ? (
-                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                    ) : (
-                      <BookOpen className="h-4 w-4 mr-2" />
-                    )}
-                    Book Session (${tutor.hourlyRate || 0}/hr)
+                  <Button type="submit" disabled={!selectedTime || bookingLoading} className="w-full bg-blue-600 hover:bg-blue-700">
+                    {bookingLoading ? <Loader2 className="animate-spin h-4 w-4" /> : "Confirm Booking"}
                   </Button>
                 </form>
               </CardContent>
