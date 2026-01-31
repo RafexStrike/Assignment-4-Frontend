@@ -16,7 +16,7 @@ async function handler(
 
   try {
     const headers = new Headers(request.headers);
-    headers.set("Origin", "https://assignment-4-frontend-3lv8.vercel.app");
+    headers.set("Origin", "https://assignment-4-frontend-ten.vercel.app");
 
     let body: BodyInit | undefined;
     if (request.method !== "GET" && request.method !== "HEAD") {

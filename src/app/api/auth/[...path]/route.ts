@@ -21,7 +21,7 @@ async function handler(request: NextRequest, { params }: any) {
   try {
     const headers = new Headers({
       "Content-Type": "application/json",
-      "Origin": "https://assignment-4-frontend-3lv8.vercel.app",
+      "Origin": "https://assignment-4-frontend-ten.vercel.app",
     });
 
     const cookieHeader = request.headers.get("cookie");
