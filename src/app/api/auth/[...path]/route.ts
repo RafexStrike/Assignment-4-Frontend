@@ -5,7 +5,8 @@ import { NextRequest, NextResponse } from "next/server";
 const BACKEND_URL = "http://localhost:5000";
 
 async function handler(request: NextRequest, { params }: any) {
-  const path = params.path?.join("/") || "";
+  const resolvedParams = await params;
+  const path = resolvedParams.path?.join("/") || "";
 
   if (!path) {
     return NextResponse.json(
@@ -23,6 +24,12 @@ async function handler(request: NextRequest, { params }: any) {
       "Origin": "http://localhost:3000",
     });
 
+    // Forward cookies from the incoming request to the backend
+    const cookieHeader = request.headers.get("cookie");
+    if (cookieHeader) {
+      headers.set("cookie", cookieHeader);
+    }
+
     let fetchOptions: RequestInit = {
       method: method,
       headers: headers,
@@ -38,7 +45,17 @@ async function handler(request: NextRequest, { params }: any) {
 
     let data;
     if (contentType?.includes("application/json")) {
-      data = await response.json();
+      try {
+        const text = await response.text();
+        if (text) {
+          data = JSON.parse(text);
+        } else {
+          data = {};
+        }
+      } catch (parseErr) {
+        console.error(`Failed to parse JSON response from ${backendUrl}:`, parseErr);
+        data = {};
+      }
     } else {
       data = await response.text();
     }

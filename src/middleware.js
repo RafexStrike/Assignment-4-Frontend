@@ -5,8 +5,8 @@ import { NextResponse } from "next/server";
 export async function middleware(request) {
   const { pathname } = request.nextUrl;
 
-  // Define protected routes
-  const protectedRoutes = ["/dashboard", "/tutor/dashboard", "/admin"];
+  // Define protected routes (only protect routes that actually exist)
+  const protectedRoutes = ["/tutor/"];
   const authRoutes = ["/login", "/register"];
 
   // Check if current route is protected
@@ -24,7 +24,11 @@ export async function middleware(request) {
       `${request.nextUrl.origin}/api/auth/session`,
       {
         method: "GET",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          // Forward cookies from the incoming request
+          "cookie": request.headers.get("cookie") || "",
+        },
         credentials: "include",
       }
     );
@@ -38,16 +42,11 @@ export async function middleware(request) {
 
     const data = await res.json();
 
+    console.log("Session data from middleware:", { pathname, data });
+
     // Check if user's role matches the route
-    if (pathname.startsWith("/tutor/dashboard") && data.user?.role !== "TUTOR") {
-      return NextResponse.redirect(new URL("/", request.url));
-    }
-
-    if (pathname.startsWith("/admin") && data.user?.role !== "ADMIN") {
-      return NextResponse.redirect(new URL("/", request.url));
-    }
-
-    if (pathname.startsWith("/dashboard") && data.user?.role !== "STUDENT") {
+    if (pathname.startsWith("/tutor/") && data.user?.role !== "TUTOR") {
+      console.log("User is not a tutor, redirecting to home");
       return NextResponse.redirect(new URL("/", request.url));
     }
 

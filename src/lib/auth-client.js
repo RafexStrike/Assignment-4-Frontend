@@ -113,7 +113,7 @@ export async function register(name, email, password, role = "STUDENT") {
  */
 export async function getSession() {
   try {
-    const res = await fetch(`${API_BASE}/session`, {
+    const res = await fetch(`${API_BASE}/get-session`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -158,7 +158,7 @@ export async function logout() {
 export function getRedirectPath(role) {
   switch (role) {
     case "STUDENT":
-      return "/dashboard";
+      return "/"; // Redirect to home page
     case "TUTOR":
       return "/tutor/dashboard";
     case "ADMIN":
