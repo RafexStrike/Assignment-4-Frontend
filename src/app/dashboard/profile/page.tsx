@@ -67,7 +67,7 @@ export default function StudentProfilePage() {
     try {
       // Note: You'll need to implement this endpoint in backend
       // For now, this is a placeholder that would update the user profile
-      const res = await fetch("http://localhost:5000/api/user/profile", {
+      const res = await fetch("https://assignment-4-backend-mkn7.onrender.com/api/user/profile", {
         method: "PUT",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

@@ -72,11 +72,11 @@ export default function TutorDashboard() {
     try {
       const [bookingsRes, profileRes] = await Promise.all([
         // fetch("/api/bookings", {
-        fetch("http://localhost:5000/api/bookings", {
+        fetch("https://assignment-4-backend-mkn7.onrender.com/api/bookings", {
           credentials: "include",
         }),
         // fetch("/api/tutor/profile", {
-        fetch("http://localhost:5000/api/tutor/profile", {
+        fetch("https://assignment-4-backend-mkn7.onrender.com/api/tutor/profile", {
           credentials: "include",
         }),
       ]);
@@ -120,7 +120,7 @@ export default function TutorDashboard() {
     try {
       // const res = await fetch(`/api/bookings/${bookingId}/complete`, {
       const res = await fetch(
-        `http://localhost:5000/api/bookings/${bookingId}/complete`,
+        `https://assignment-4-backend-mkn7.onrender.com/api/bookings/${bookingId}/complete`,
         {
           method: "PATCH",
           credentials: "include",

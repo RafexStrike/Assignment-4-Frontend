@@ -49,7 +49,7 @@ export default function AdminCategoriesPage() {
 
   async function fetchCategories() {
     try {
-      const res = await fetch("http://localhost:5000/api/admin/categories", {
+      const res = await fetch("https://assignment-4-backend-mkn7.onrender.com/api/admin/categories", {
         credentials: "include",
       });
 
@@ -73,7 +73,7 @@ export default function AdminCategoriesPage() {
     setMessage(null);
 
     try {
-      const res = await fetch("http://localhost:5000/api/admin/categories", {
+      const res = await fetch("https://assignment-4-backend-mkn7.onrender.com/api/admin/categories", {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -104,7 +104,7 @@ export default function AdminCategoriesPage() {
     setMessage(null);
 
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/categories/${editingId}`, {
+      const res = await fetch(`https://assignment-4-backend-mkn7.onrender.com/api/admin/categories/${editingId}`, {
         method: "PUT",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -138,7 +138,7 @@ export default function AdminCategoriesPage() {
     }
 
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/categories/${categoryId}`, {
+      const res = await fetch(`https://assignment-4-backend-mkn7.onrender.com/api/admin/categories/${categoryId}`, {
         method: "DELETE",
         credentials: "include",
       });
