@@ -2,6 +2,11 @@ import Link from "next/link"
 import { GraduationCap, Mail, MapPin, Phone } from "lucide-react"
 
 export function Footer() {
+  // Prevent default behavior for dummy links
+  const handleDummyClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+  };
+
   return (
     <footer className="relative border-t border-slate-800/50 bg-slate-950/80 backdrop-blur-xl">
       {/* Gradient overlay */}
@@ -11,7 +16,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Brand Column */}
           <div className="space-y-4">
-            <Link href="/" className="flex items-center gap-2 group">
+            <Link href="#" onClick={handleDummyClick} className="flex items-center gap-2 group cursor-default">
               <div className="relative">
                 <div className="absolute inset-0 bg-blue-500/20 blur-xl rounded-full" />
                 <GraduationCap className="h-8 w-8 text-blue-500 relative z-10" />
@@ -30,22 +35,22 @@ export function Footer() {
             <h3 className="font-semibold text-slate-100 mb-4">Quick Links</h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/tutors" className="text-sm text-slate-400 hover:text-blue-400 transition-colors duration-200">
+                <Link href="#" onClick={handleDummyClick} className="text-sm text-slate-400 hover:text-blue-400 transition-colors duration-200 cursor-default">
                   Find Tutors
                 </Link>
               </li>
               <li>
-                <Link href="#how-it-works" className="text-sm text-slate-400 hover:text-blue-400 transition-colors duration-200">
+                <Link href="#" onClick={handleDummyClick} className="text-sm text-slate-400 hover:text-blue-400 transition-colors duration-200 cursor-default">
                   How It Works
                 </Link>
               </li>
               <li>
-                <Link href="#features" className="text-sm text-slate-400 hover:text-blue-400 transition-colors duration-200">
+                <Link href="#" onClick={handleDummyClick} className="text-sm text-slate-400 hover:text-blue-400 transition-colors duration-200 cursor-default">
                   Features
                 </Link>
               </li>
               <li>
-                <Link href="/become-tutor" className="text-sm text-slate-400 hover:text-blue-400 transition-colors duration-200">
+                <Link href="#" onClick={handleDummyClick} className="text-sm text-slate-400 hover:text-blue-400 transition-colors duration-200 cursor-default">
                   Become a Tutor
                 </Link>
               </li>
@@ -57,22 +62,22 @@ export function Footer() {
             <h3 className="font-semibold text-slate-100 mb-4">Resources</h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/about" className="text-sm text-slate-400 hover:text-blue-400 transition-colors duration-200">
+                <Link href="#" onClick={handleDummyClick} className="text-sm text-slate-400 hover:text-blue-400 transition-colors duration-200 cursor-default">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link href="/faq" className="text-sm text-slate-400 hover:text-blue-400 transition-colors duration-200">
+                <Link href="#" onClick={handleDummyClick} className="text-sm text-slate-400 hover:text-blue-400 transition-colors duration-200 cursor-default">
                   FAQ
                 </Link>
               </li>
               <li>
-                <Link href="/blog" className="text-sm text-slate-400 hover:text-blue-400 transition-colors duration-200">
+                <Link href="#" onClick={handleDummyClick} className="text-sm text-slate-400 hover:text-blue-400 transition-colors duration-200 cursor-default">
                   Blog
                 </Link>
               </li>
               <li>
-                <Link href="/support" className="text-sm text-slate-400 hover:text-blue-400 transition-colors duration-200">
+                <Link href="#" onClick={handleDummyClick} className="text-sm text-slate-400 hover:text-blue-400 transition-colors duration-200 cursor-default">
                   Support
                 </Link>
               </li>
@@ -85,19 +90,15 @@ export function Footer() {
             <ul className="space-y-3">
               <li className="flex items-center gap-2 text-sm text-slate-400">
                 <Mail className="h-4 w-4 text-blue-500" />
-                <a href="mailto:hello@SkillBridge.com" className="hover:text-blue-400 transition-colors duration-200">
-                  hello@SkillBridge.com
-                </a>
+                <span className="cursor-default">hello@SkillBridge.com</span>
               </li>
               <li className="flex items-center gap-2 text-sm text-slate-400">
                 <Phone className="h-4 w-4 text-blue-500" />
-                <a href="tel:+1234567890" className="hover:text-blue-400 transition-colors duration-200">
-                  +1 (234) 567-890
-                </a>
+                <span className="cursor-default">+1 (234) 567-890</span>
               </li>
               <li className="flex items-start gap-2 text-sm text-slate-400">
                 <MapPin className="h-4 w-4 text-blue-500 mt-0.5" />
-                <span>123 Education St,<br />Learning City, LC 12345</span>
+                <span>123 Education St,<br />Banani, Dhaka</span>
               </li>
             </ul>
           </div>
@@ -109,10 +110,10 @@ export function Footer() {
             © {new Date().getFullYear()} SkillBridge. All rights reserved.
           </p>
           <div className="flex gap-6">
-            <Link href="/privacy" className="text-sm text-slate-500 hover:text-blue-400 transition-colors duration-200">
+            <Link href="#" onClick={handleDummyClick} className="text-sm text-slate-500 hover:text-blue-400 transition-colors duration-200 cursor-default">
               Privacy Policy
             </Link>
-            <Link href="/terms" className="text-sm text-slate-500 hover:text-blue-400 transition-colors duration-200">
+            <Link href="#" onClick={handleDummyClick} className="text-sm text-slate-500 hover:text-blue-400 transition-colors duration-200 cursor-default">
               Terms of Service
             </Link>
           </div>

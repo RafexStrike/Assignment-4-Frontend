@@ -88,10 +88,10 @@ export default function HomePage() {
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-8 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-500">
               {[
-                { icon: Users, label: "Active Tutors", value: "2,500+" },
-                { icon: BookOpen, label: "Subjects", value: "150+" },
-                { icon: Star, label: "Average Rating", value: "4.9" },
-                { icon: Video, label: "Lessons Completed", value: "50K+" },
+                { icon: Users, label: "Active Tutors", value: "100+" },
+                { icon: BookOpen, label: "Subjects", value: "10+" },
+                { icon: Star, label: "Average Rating", value: "4.0" },
+                { icon: Video, label: "Lessons Completed", value: "50+" },
               ].map((stat, index) => (
                 <div key={index} className="relative group">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-lg opacity-0 group-hover:opacity-20 blur transition duration-300" />
@@ -269,27 +269,27 @@ export default function HomePage() {
           <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {[
               {
-                name: "Sarah Johnson",
-                role: "High School Student",
-                image: "SJ",
+                name: "Ayesha Rahman",
+                role: "HSC Science Student",
+                image: "AR",
                 content:
-                  "My math grades improved from C to A in just 3 months. The personalized attention made all the difference!",
+                  "I was struggling with higher math before HSC. After regular sessions, my concepts became clear and my confidence improved a lot.",
                 rating: 5,
               },
               {
-                name: "Michael Chen",
-                role: "College Student",
-                image: "MC",
+                name: "Tanvir Hasan",
+                role: "University Engineering Student",
+                image: "TH",
                 content:
-                  "Found an amazing physics tutor who explained complex concepts in ways I could actually understand. Highly recommend!",
+                  "The physics tutor explained difficult topics like vectors and electromagnetism in a very simple way. It helped me a lot in my semester exams.",
                 rating: 5,
               },
               {
-                name: "Emily Rodriguez",
-                role: "Graduate Student",
-                image: "ER",
+                name: "Nusrat Jahan",
+                role: "Job Holder & IELTS Candidate",
+                image: "NJ",
                 content:
-                  "The flexibility to schedule sessions around my work schedule was perfect. My tutor was patient and knowledgeable.",
+                  "Balancing work and study was tough, but the flexible scheduling made it possible. My English speaking and writing improved significantly.",
                 rating: 5,
               },
             ].map((testimonial, index) => (
@@ -339,7 +339,7 @@ export default function HomePage() {
                   </span>
                 </CardTitle>
                 <CardDescription className="text-lg text-slate-300 max-w-2xl mx-auto">
-                  Join thousands of students who are already achieving their
+                  Join hundreds of students who are already achieving their
                   academic goals with expert tutors.
                 </CardDescription>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
