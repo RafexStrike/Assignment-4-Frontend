@@ -4,7 +4,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 const BACKEND_URL = "https://backend-three-liard-74.vercel.app";
 
-
 async function handler(
   request: NextRequest,
   context: { params: Promise<{ path: string[] }> }
@@ -12,15 +11,39 @@ async function handler(
   const { path } = await context.params;
   const joinedPath = path?.join("/") || "";
 
-  console.log("[api/[...path]/route.ts] ENTER handler, method:", request.method, "path:", joinedPath);
+  console.log(
+    "[api/[...path]/route.ts] ENTER handler, method:",
+    request.method,
+    "path:",
+    joinedPath
+  );
 
   const backendUrl = `${BACKEND_URL}/api/${joinedPath}${request.nextUrl.search}`;
 
-  console.log("[api/[...path]/route.ts] BEFORE BACKEND CALL - url:", backendUrl);
+  console.log(
+    "[api/[...path]/route.ts] BEFORE BACKEND CALL - url:",
+    backendUrl
+  );
 
   try {
-    const headers = new Headers(request.headers);
-    headers.set("Origin", "https://assignment-4-frontend-ten.vercel.app");
+    const headers = new Headers();
+
+    // ✅ Forward cookies
+    const cookieHeader = request.headers.get("cookie");
+    if (cookieHeader) {
+      headers.set("cookie", cookieHeader);
+    }
+
+    // ✅ FORCE content-type for body parsing
+    if (request.method !== "GET" && request.method !== "HEAD") {
+      headers.set("Content-Type", "application/json");
+    }
+
+    // ✅ Correct origin
+    headers.set(
+      "Origin",
+      "https://assignment-4-frontend-ten.vercel.app"
+    );
 
     let body: BodyInit | undefined;
     if (request.method !== "GET" && request.method !== "HEAD") {
@@ -33,24 +56,27 @@ async function handler(
       method: request.method,
       headers,
       body,
+      credentials: "include",
       cache: "no-store",
     });
 
-    console.log("[api/[...path]/route.ts] AFTER FETCH - backend response status:", response.status);
+    console.log(
+      "[api/[...path]/route.ts] AFTER FETCH - backend response status:",
+      response.status
+    );
 
-    const contentType = response.headers.get("content-type");
+    const data = await response.json();
 
-    const data = contentType?.includes("application/json")
-      ? await response.json()
-      : await response.text();
-
-    console.log("[api/[...path]/route.ts] BEFORE RESPONSE - preparing response with status:", response.status);
+    console.log(
+      "[api/[...path]/route.ts] BEFORE RESPONSE - preparing response with status:",
+      response.status
+    );
 
     const res = NextResponse.json(data, {
       status: response.status,
     });
 
-    // Forward cookies
+    // ✅ Forward Set-Cookie headers
     for (const cookie of response.headers.getSetCookie()) {
       res.headers.append("set-cookie", cookie);
     }
@@ -58,7 +84,11 @@ async function handler(
     console.log("[api/[...path]/route.ts] EXIT handler - success");
     return res;
   } catch (error: any) {
-    console.error("[api/[...path]/route.ts] PROXY ERROR:", error instanceof Error ? error.message : String(error));
+    console.error(
+      "[api/[...path]/route.ts] PROXY ERROR:",
+      error instanceof Error ? error.message : String(error)
+    );
+
     return NextResponse.json(
       { error: "Proxy failed", message: error.message },
       { status: 500 }

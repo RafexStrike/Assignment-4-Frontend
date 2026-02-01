@@ -57,68 +57,53 @@ export default function StudentDashboard() {
   }, []);
 
   async function fetchDashboardData() {
-    console.log("[dashboard/page.tsx] ENTER fetchDashboardData");
+  console.log("[dashboard/page.tsx] ENTER fetchDashboardData");
 
-    try {
-      console.log("[dashboard/page.tsx] BEFORE API CALL - fetching bookings");
+  try {
+    console.log("[dashboard/page.tsx] BEFORE API CALL - fetching bookings");
 
-      const res = await fetch(
-        "https://backend-three-liard-74.vercel.app/api/bookings",
-        {
-          credentials: "include",
-        },
-      );
+    const res = await fetch("/api/bookings", {
+      credentials: "include",
+      cache: "no-store",
+    });
 
-      console.log(
-        "[dashboard/page.tsx] AFTER API CALL - response status:",
-        res.status,
-      );
+    console.log(
+      "[dashboard/page.tsx] AFTER API CALL - response status:",
+      res.status
+    );
 
-      if (!res.ok) throw new Error("Failed to fetch bookings");
+    if (!res.ok) throw new Error("Failed to fetch bookings");
 
-      const data = await res.json();
+    const data = await res.json();
 
-      console.log(
-        "[dashboard/page.tsx] AFTER DATA PARSE - processing bookings",
-      );
+    const bookings = data.data || {};
+    const upcoming = bookings.upcoming || [];
+    const past = bookings.past || [];
+    const cancelled = bookings.cancelled || [];
 
-      // Handle grouped data format from backend
-      const bookings = data.data || {};
-      const upcoming = bookings.upcoming || [];
-      const past = bookings.past || [];
-      const cancelled = bookings.cancelled || [];
+    setUpcomingBookings(upcoming.slice(0, 3));
+    setPastBookings(past.slice(0, 3));
 
-      console.log(
-        "[dashboard/page.tsx] BEFORE STATE UPDATE - upcoming:', upcoming.length, past:",
-        past.length,
-      );
+    setStats({
+      totalSessions: upcoming.length + past.length + cancelled.length,
+      upcomingCount: upcoming.length,
+      completedCount: past.filter((b: any) => b.status === "COMPLETED").length,
+      pendingReviews: past.filter(
+        (b: any) => b.status === "COMPLETED" && !b.review
+      ).length,
+    });
 
-      setUpcomingBookings(upcoming.slice(0, 3));
-      setPastBookings(past.slice(0, 3));
-
-      // Calculate stats
-      const completedWithoutReview = past.filter(
-        (b: Booking) => b.status === "COMPLETED" && !b.review,
-      );
-
-      setStats({
-        totalSessions: upcoming.length + past.length + cancelled.length,
-        upcomingCount: upcoming.length,
-        completedCount: past.filter((b: Booking) => b.status === "COMPLETED")
-          .length,
-        pendingReviews: completedWithoutReview.length,
-      });
-
-      console.log("[dashboard/page.tsx] EXIT fetchDashboardData - success");
-    } catch (error) {
-      console.error(
-        "[dashboard/page.tsx] Error fetching dashboard:",
-        error instanceof Error ? error.message : String(error),
-      );
-    } finally {
-      setLoading(false);
-    }
+    console.log("[dashboard/page.tsx] EXIT fetchDashboardData - success");
+  } catch (error) {
+    console.error(
+      "[dashboard/page.tsx] Error fetching dashboard:",
+      error instanceof Error ? error.message : String(error)
+    );
+  } finally {
+    setLoading(false);
   }
+}
+
 
   function formatDate(dateStr: string) {
     const date = new Date(dateStr);

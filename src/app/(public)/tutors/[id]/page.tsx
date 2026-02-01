@@ -104,49 +104,62 @@ export default function TutorDetailPage() {
     return acc;
   }, {} as Record<string, AvailabilitySlot[]>);
 
-  async function handleBooking(e: React.FormEvent) {
-    e.preventDefault();
-    setMessage(null);
-    
-    const session = await getSession();
-    if (!session) {
-      router.push(`/login?redirect=/tutors/${params.id}`);
-      return;
-    }
 
-    if (session.user.role !== "STUDENT") {
-      setMessage({ type: "error", text: "Only students can book sessions" });
-      return;
-    }
 
-    const startAt = new Date(`${selectedDate}T${selectedTime}`);
-    const endAt = new Date(startAt.getTime() + 60 * 60 * 1000);
+async function handleBooking(e: React.FormEvent) {
+  e.preventDefault();
+  setMessage(null);
 
-    setBookingLoading(true);
-    try {
-      const res = await fetch("/api/bookings", {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          tutorId: params.id,
-          subject: selectedSubject,
-          startAt: startAt.toISOString(),
-          endAt: endAt.toISOString(),
-          notes,
-        }),
-      });
-
-      if (!res.ok) throw new Error("Booking failed");
-
-      setMessage({ type: "success", text: "Session booked successfully!" });
-      setTimeout(() => router.push("/dashboard/bookings"), 2000);
-    } catch (err: any) {
-      setMessage({ type: "error", text: err.message });
-    } finally {
-      setBookingLoading(false);
-    }
+  const session = await getSession();
+  if (!session) {
+    router.push(`/login?redirect=/tutors/${params.id}`);
+    return;
   }
+
+  if (session.user.role !== "STUDENT") {
+    setMessage({ type: "error", text: "Only students can book sessions" });
+    return;
+  }
+
+  // ✅ FIXED TIME LOGIC
+  const startDate = new Date(`${selectedDate}T${selectedTime}:00`);
+  const endDate = new Date(startDate.getTime() + 60 * 60 * 1000);
+
+  const startAt = `${selectedDate}T${selectedTime}:00`;
+  const endAt = `${selectedDate}T${endDate
+    .toTimeString()
+    .slice(0, 5)}:00`;
+
+  setBookingLoading(true);
+  try {
+    const res = await fetch("/api/bookings", {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        tutorId: params.id,
+        subject: selectedSubject,
+        startAt,
+        endAt,
+        notes,
+      }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.message || "Booking failed");
+    }
+
+    setMessage({ type: "success", text: "Session booked successfully!" });
+    setTimeout(() => router.push("/dashboard/bookings"), 2000);
+  } catch (err: any) {
+    setMessage({ type: "error", text: err.message });
+  } finally {
+    setBookingLoading(false);
+  }
+}
+
+
 
   if (loading) return <div className="min-h-screen bg-slate-950 flex items-center justify-center"><Loader2 className="animate-spin text-blue-500" /></div>;
   if (!tutor) return <div className="min-h-screen bg-slate-950 text-white flex items-center justify-center">Tutor not found</div>;
