@@ -1,59 +1,59 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { GraduationCap, Menu, X, LogOut } from "lucide-react"
-import { useState, useEffect } from "react"
-import { getSession, logout } from "@/lib/auth-client"
-import { useRouter } from "next/navigation"
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { GraduationCap, Menu, X, LogOut } from "lucide-react";
+import { useState, useEffect } from "react";
+import { getSession, logout } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 export function Navbar() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [session, setSession] = useState<any>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const router = useRouter()
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [session, setSession] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const sessionData = await getSession()
-        setSession(sessionData)
+        const sessionData = await getSession();
+        setSession(sessionData);
       } catch (error) {
-        console.error("Failed to fetch session:", error)
-        setSession(null)
+        console.error("Failed to fetch session:", error);
+        setSession(null);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
+    };
 
-    checkSession()
-  }, [])
+    checkSession();
+  }, []);
 
   const getDashboardLink = () => {
-    if (!session?.user) return "/login"
-    
+    if (!session?.user) return "/login";
+
     switch (session.user.role) {
       case "TUTOR":
-        return "/tutor/dashboard"
+        return "/tutor/dashboard";
       case "ADMIN":
-        return "/admin"
+        return "/admin";
       case "STUDENT":
-        return "/dashboard"
+        return "/dashboard";
       default:
-        return "/login"
+        return "/login";
     }
-  }
+  };
 
   const handleLogout = async () => {
     try {
-      await logout()
-      setSession(null)
-      setMobileMenuOpen(false)
-      router.push("/login")
+      await logout();
+      setSession(null);
+      setMobileMenuOpen(false);
+      router.push("/login");
     } catch (error) {
-      console.error("Logout failed:", error)
+      console.error("Logout failed:", error);
     }
-  }
+  };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 border-b border-slate-800/50 bg-slate-950/80 backdrop-blur-xl">
@@ -72,14 +72,20 @@ export function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
-            <Link 
-              href="/tutors" 
+            <Link
+              href="/tutors"
               className="text-slate-300 hover:text-blue-400 transition-colors duration-200 text-sm font-medium"
             >
               Find Tutors
             </Link>
-            <Link 
-              href={getDashboardLink()} 
+            <Link
+              href="/howItWorks"
+              className="text-slate-300 hover:text-blue-400 transition-colors duration-200 text-sm font-medium"
+            >
+              How it works
+            </Link>
+            <Link
+              href={getDashboardLink()}
               className="text-slate-300 hover:text-blue-400 transition-colors duration-200 text-sm font-medium"
             >
               Dashboard
@@ -103,8 +109,8 @@ export function Navbar() {
             {!isLoading && (
               <>
                 {session?.user ? (
-                  <Button 
-                    variant="ghost" 
+                  <Button
+                    variant="ghost"
                     onClick={handleLogout}
                     className="text-slate-300 hover:text-blue-400 transition-colors"
                   >
@@ -138,29 +144,35 @@ export function Navbar() {
         {mobileMenuOpen && (
           <div className="md:hidden py-4 border-t border-slate-800/50 animate-in slide-in-from-top duration-200">
             <div className="flex flex-col gap-4">
-              <Link 
-                href="/tutors" 
+              <Link
+                href="/tutors"
                 className="text-slate-300 hover:text-blue-400 transition-colors duration-200 text-sm font-medium py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Find Tutors
               </Link>
-              <Link 
-                href={getDashboardLink()} 
+              <Link
+                href="/howItWorks"
+                className="text-slate-300 hover:text-blue-400 transition-colors duration-200 text-sm font-medium"
+              >
+                How it works
+              </Link>
+              <Link
+                href={getDashboardLink()}
                 className="text-slate-300 hover:text-blue-400 transition-colors duration-200 text-sm font-medium py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Dashboard
               </Link>
-              <Link 
-                href="#how-it-works" 
+              <Link
+                href="#how-it-works"
                 className="text-slate-300 hover:text-blue-400 transition-colors duration-200 text-sm font-medium py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 How It Works
               </Link>
-              <Link 
-                href="#features" 
+              <Link
+                href="#features"
                 className="text-slate-300 hover:text-blue-400 transition-colors duration-200 text-sm font-medium py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
@@ -169,8 +181,8 @@ export function Navbar() {
               {!isLoading && (
                 <div className="flex flex-col gap-2 pt-4 border-t border-slate-800/50">
                   {session?.user ? (
-                    <Button 
-                      variant="ghost" 
+                    <Button
+                      variant="ghost"
                       onClick={handleLogout}
                       className="w-full justify-start text-slate-300 hover:text-blue-400"
                     >
@@ -194,5 +206,5 @@ export function Navbar() {
         )}
       </div>
     </nav>
-  )
+  );
 }
