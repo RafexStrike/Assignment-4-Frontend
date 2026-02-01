@@ -64,8 +64,8 @@ export default function TutorProfilePage() {
   async function fetchData() {
     try {
       const [profileRes, categoriesRes] = await Promise.all([
-        fetch("https://backend-three-liard-74.vercel.app/api/tutor/profile", { credentials: "include" }),
-        fetch("https://backend-three-liard-74.vercel.app/api/tutors/categories", { credentials: "include" }),
+        fetch("/api/tutor/profile", { credentials: "include" }),
+        fetch("/api/tutors/categories", { credentials: "include" }),
       ]);
 
       if (profileRes.status === 404) {
@@ -102,7 +102,7 @@ export default function TutorProfilePage() {
 
     try {
       const method = profile ? "PUT" : "POST";
-      const res = await fetch("https://backend-three-liard-74.vercel.app/api/tutor/profile", {
+      const res = await fetch("/api/tutor/profile", {
         method,
         credentials: "include",
         headers: { "Content-Type": "application/json" },

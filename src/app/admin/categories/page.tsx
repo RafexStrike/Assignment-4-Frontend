@@ -49,7 +49,7 @@ export default function AdminCategoriesPage() {
 
   async function fetchCategories() {
     try {
-      const res = await fetch("https://backend-three-liard-74.vercel.app/api/admin/categories", {
+      const res = await fetch("/api/admin/categories", {
         credentials: "include",
       });
 
@@ -73,7 +73,7 @@ export default function AdminCategoriesPage() {
     setMessage(null);
 
     try {
-      const res = await fetch("https://backend-three-liard-74.vercel.app/api/admin/categories", {
+      const res = await fetch("/api/admin/categories", {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -104,7 +104,7 @@ export default function AdminCategoriesPage() {
     setMessage(null);
 
     try {
-      const res = await fetch(`https://backend-three-liard-74.vercel.app/api/admin/categories/${editingId}`, {
+      const res = await fetch(`/api/admin/categories/${editingId}`, {
         method: "PUT",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -138,7 +138,7 @@ export default function AdminCategoriesPage() {
     }
 
     try {
-      const res = await fetch(`https://backend-three-liard-74.vercel.app/api/admin/categories/${categoryId}`, {
+      const res = await fetch(`/api/admin/categories/${categoryId}`, {
         method: "DELETE",
         credentials: "include",
       });

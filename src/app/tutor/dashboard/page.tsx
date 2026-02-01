@@ -76,11 +76,11 @@ export default function TutorDashboard() {
 
       const [bookingsRes, profileRes] = await Promise.all([
         // fetch("/api/bookings", {
-        fetch("https://backend-three-liard-74.vercel.app/api/bookings", {
+        fetch("/api/bookings", {
           credentials: "include",
         }),
         // fetch("/api/tutor/profile", {
-        fetch("https://backend-three-liard-74.vercel.app/api/tutor/profile", {
+        fetch("/api/tutor/profile", {
           credentials: "include",
         }),
       ]);
@@ -136,7 +136,7 @@ export default function TutorDashboard() {
 
       // const res = await fetch(`/api/bookings/${bookingId}/complete`, {
       const res = await fetch(
-        `https://backend-three-liard-74.vercel.app/api/bookings/${bookingId}/complete`,
+        `/api/bookings/${bookingId}/complete`,
         {
           method: "PATCH",
           credentials: "include",

@@ -57,7 +57,7 @@ export default function AdminDashboard() {
     try {
       console.log("[admin/page.tsx] BEFORE API CALL - fetching admin dashboard stats");
 
-      const res = await fetch("https://backend-three-liard-74.vercel.app/api/admin/dashboard", {
+      const res = await fetch("/api/admin/dashboard", {
         credentials: "include",
       });
 

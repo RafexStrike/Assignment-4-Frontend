@@ -62,7 +62,7 @@ export default function StudentDashboard() {
     try {
       console.log("[dashboard/page.tsx] BEFORE API CALL - fetching bookings");
 
-      const res = await fetch("https://backend-three-liard-74.vercel.app/api/bookings", {
+      const res = await fetch("/api/bookings", {
         credentials: "include",
       });
 

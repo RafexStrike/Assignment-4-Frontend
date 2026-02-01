@@ -74,7 +74,7 @@ export default function AdminBookingsPage() {
       queryParams.append("limit", "10");
       if (statusFilter && statusFilter !== "ALL") queryParams.append("status", statusFilter);
 
-      const res = await fetch(`https://backend-three-liard-74.vercel.app/api/admin/bookings?${queryParams}`, {
+      const res = await fetch(`/api/admin/bookings?${queryParams}`, {
         credentials: "include",
       });
 
@@ -100,7 +100,7 @@ export default function AdminBookingsPage() {
     setMessage(null);
 
     try {
-      const res = await fetch(`https://backend-three-liard-74.vercel.app/api/admin/bookings/${bookingId}/cancel`, {
+      const res = await fetch(`/api/admin/bookings/${bookingId}/cancel`, {
         method: "PATCH",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

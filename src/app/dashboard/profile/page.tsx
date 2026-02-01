@@ -67,7 +67,7 @@ export default function StudentProfilePage() {
     try {
       // Note: You'll need to implement this endpoint in backend
       // For now, this is a placeholder that would update the user profile
-      const res = await fetch("https://backend-three-liard-74.vercel.app/api/user/profile", {
+      const res = await fetch("/api/user/profile", {
         method: "PUT",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
