@@ -62,17 +62,25 @@ export default function StudentDashboard() {
     try {
       console.log("[dashboard/page.tsx] BEFORE API CALL - fetching bookings");
 
-      const res = await fetch("/api/bookings", {
-        credentials: "include",
-      });
+      const res = await fetch(
+        "https://backend-three-liard-74.vercel.app/api/bookings",
+        {
+          credentials: "include",
+        },
+      );
 
-      console.log("[dashboard/page.tsx] AFTER API CALL - response status:", res.status);
+      console.log(
+        "[dashboard/page.tsx] AFTER API CALL - response status:",
+        res.status,
+      );
 
       if (!res.ok) throw new Error("Failed to fetch bookings");
 
       const data = await res.json();
-      
-      console.log("[dashboard/page.tsx] AFTER DATA PARSE - processing bookings");
+
+      console.log(
+        "[dashboard/page.tsx] AFTER DATA PARSE - processing bookings",
+      );
 
       // Handle grouped data format from backend
       const bookings = data.data || {};
@@ -80,26 +88,33 @@ export default function StudentDashboard() {
       const past = bookings.past || [];
       const cancelled = bookings.cancelled || [];
 
-      console.log("[dashboard/page.tsx] BEFORE STATE UPDATE - upcoming:', upcoming.length, "past:", past.length);
+      console.log(
+        "[dashboard/page.tsx] BEFORE STATE UPDATE - upcoming:', upcoming.length, past:",
+        past.length,
+      );
 
       setUpcomingBookings(upcoming.slice(0, 3));
       setPastBookings(past.slice(0, 3));
 
       // Calculate stats
       const completedWithoutReview = past.filter(
-        (b: Booking) => b.status === "COMPLETED" && !b.review
+        (b: Booking) => b.status === "COMPLETED" && !b.review,
       );
 
       setStats({
         totalSessions: upcoming.length + past.length + cancelled.length,
         upcomingCount: upcoming.length,
-        completedCount: past.filter((b: Booking) => b.status === "COMPLETED").length,
+        completedCount: past.filter((b: Booking) => b.status === "COMPLETED")
+          .length,
         pendingReviews: completedWithoutReview.length,
       });
 
       console.log("[dashboard/page.tsx] EXIT fetchDashboardData - success");
     } catch (error) {
-      console.error("[dashboard/page.tsx] Error fetching dashboard:", error instanceof Error ? error.message : String(error));
+      console.error(
+        "[dashboard/page.tsx] Error fetching dashboard:",
+        error instanceof Error ? error.message : String(error),
+      );
     } finally {
       setLoading(false);
     }
@@ -129,7 +144,9 @@ export default function StudentDashboard() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-100">Student Dashboard</h1>
+          <h1 className="text-3xl font-bold text-slate-100">
+            Student Dashboard
+          </h1>
           <p className="text-slate-400 mt-1">
             Track your learning journey and upcoming sessions
           </p>
@@ -213,12 +230,19 @@ export default function StudentDashboard() {
       <Card className="bg-slate-900/60 backdrop-blur-xl border-slate-800/50">
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle className="text-xl text-slate-100">Upcoming Sessions</CardTitle>
+            <CardTitle className="text-xl text-slate-100">
+              Upcoming Sessions
+            </CardTitle>
             <CardDescription className="text-slate-400">
               Your scheduled tutoring sessions
             </CardDescription>
           </div>
-          <Button variant="ghost" size="sm" className="text-blue-400" onClick={() => router.push("/dashboard/bookings")}>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-blue-400"
+            onClick={() => router.push("/dashboard/bookings")}
+          >
             View All <ArrowRight className="h-4 w-4 ml-1" />
           </Button>
         </CardHeader>
@@ -271,7 +295,9 @@ export default function StudentDashboard() {
       {/* Recent Activity */}
       <Card className="bg-slate-900/60 backdrop-blur-xl border-slate-800/50">
         <CardHeader>
-          <CardTitle className="text-xl text-slate-100">Recent Activity</CardTitle>
+          <CardTitle className="text-xl text-slate-100">
+            Recent Activity
+          </CardTitle>
           <CardDescription className="text-slate-400">
             Your past sessions
           </CardDescription>

@@ -72,7 +72,9 @@ export default function TutorDashboard() {
     console.log("[tutor/dashboard/page.tsx] ENTER fetchDashboardData");
 
     try {
-      console.log("[tutor/dashboard/page.tsx] BEFORE API CALLS - fetching bookings and profile");
+      console.log(
+        "[tutor/dashboard/page.tsx] BEFORE API CALLS - fetching bookings and profile",
+      );
 
       const [bookingsRes, profileRes] = await Promise.all([
         // fetch("/api/bookings", {
@@ -85,12 +87,23 @@ export default function TutorDashboard() {
         }),
       ]);
 
-      console.log("[tutor/dashboard/page.tsx] AFTER API CALLS - bookings status:", bookingsRes.status, "profile status:", profileRes.status);
+      console.log(
+        "[tutor/dashboard/page.tsx] AFTER API CALLS - bookings status:",
+        bookingsRes.status,
+        "profile status:",
+        profileRes.status,
+      );
 
-      const bookingsData = bookingsRes.ok ? await bookingsRes.json() : { data: [] };
-      const profileData = profileRes.ok ? await profileRes.json() : { data: {} };
+      const bookingsData = bookingsRes.ok
+        ? await bookingsRes.json()
+        : { data: [] };
+      const profileData = profileRes.ok
+        ? await profileRes.json()
+        : { data: {} };
 
-      console.log("[tutor/dashboard/page.tsx] AFTER DATA PARSE - processing bookings");
+      console.log(
+        "[tutor/dashboard/page.tsx] AFTER DATA PARSE - processing bookings",
+      );
 
       // Calculate stats
       const allBookings = bookingsData.data || [];
@@ -102,7 +115,12 @@ export default function TutorDashboard() {
           b.status === "CONFIRMED" && new Date(b.startAt) > new Date(),
       );
 
-      console.log("[tutor/dashboard/page.tsx] BEFORE STATE UPDATE - total bookings:', allBookings.length, "completed:", completedBookings.length, "upcoming:", upcomingBookings.length);
+      console.log(
+        "[tutor/dashboard/page.tsx] BEFORE STATE UPDATE - total bookings:', allBookings.length, completed:",
+        completedBookings.length,
+        "upcoming:",
+        upcomingBookings.length,
+      );
 
       setBookings(allBookings.slice(0, 5)); // Show last 5 bookings
       setStats({
@@ -116,9 +134,14 @@ export default function TutorDashboard() {
         upcomingCount: upcomingBookings.length,
       });
 
-      console.log("[tutor/dashboard/page.tsx] EXIT fetchDashboardData - success");
+      console.log(
+        "[tutor/dashboard/page.tsx] EXIT fetchDashboardData - success",
+      );
     } catch (error) {
-      console.error("[tutor/dashboard/page.tsx] Error fetching dashboard:", error instanceof Error ? error.message : String(error));
+      console.error(
+        "[tutor/dashboard/page.tsx] Error fetching dashboard:",
+        error instanceof Error ? error.message : String(error),
+      );
       setMessage({ type: "error", text: "Failed to load dashboard data" });
     } finally {
       setLoading(false);
@@ -126,38 +149,50 @@ export default function TutorDashboard() {
   }
 
   async function handleCompleteBooking(bookingId: string) {
-    console.log("[tutor/dashboard/page.tsx] ENTER handleCompleteBooking, bookingId:", bookingId);
+    console.log(
+      "[tutor/dashboard/page.tsx] ENTER handleCompleteBooking, bookingId:",
+      bookingId,
+    );
 
     setCompletingId(bookingId);
     setMessage(null);
 
     try {
-      console.log("[tutor/dashboard/page.tsx] BEFORE API CALL - calling complete endpoint");
-
-      // const res = await fetch(`/api/bookings/${bookingId}/complete`, {
-      const res = await fetch(
-        `/api/bookings/${bookingId}/complete`,
-        {
-          method: "PATCH",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-        },
+      console.log(
+        "[tutor/dashboard/page.tsx] BEFORE API CALL - calling complete endpoint",
       );
 
-      console.log("[tutor/dashboard/page.tsx] AFTER API CALL - response status:", res.status);
+      // const res = await fetch(`/api/bookings/${bookingId}/complete`, {
+      const res = await fetch(`/api/bookings/${bookingId}/complete`, {
+        method: "PATCH",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      console.log(
+        "[tutor/dashboard/page.tsx] AFTER API CALL - response status:",
+        res.status,
+      );
 
       if (!res.ok) {
         const error = await res.json();
-        console.log("[tutor/dashboard/page.tsx] ERROR - complete booking failed");
+        console.log(
+          "[tutor/dashboard/page.tsx] ERROR - complete booking failed",
+        );
         throw new Error(error.message || "Failed to complete booking");
       }
 
-      console.log("[tutor/dashboard/page.tsx] SUCCESS - booking completed, refreshing data");
+      console.log(
+        "[tutor/dashboard/page.tsx] SUCCESS - booking completed, refreshing data",
+      );
 
       setMessage({ type: "success", text: "Session marked as completed!" });
       fetchDashboardData(); // Refresh data
     } catch (error: any) {
-      console.log("[tutor/dashboard/page.tsx] CATCH ERROR:", error instanceof Error ? error.message : String(error));
+      console.log(
+        "[tutor/dashboard/page.tsx] CATCH ERROR:",
+        error instanceof Error ? error.message : String(error),
+      );
       setMessage({ type: "error", text: error.message });
     } finally {
       setCompletingId(null);
